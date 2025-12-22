@@ -15,7 +15,7 @@ const BACKEND_URL = process.env.BACKEND_URL
 const BACKEND_API_KEY = process.env.BACKEND_API_KEY
 
 // Proxy route example
-app.all('/api/:path(*)', async (req, res) => {
+app.all('/api/*splat', async (req, res) => {
   try {
     const url = `${BACKEND_URL}${req.path.replace(/^\/api/, '')}`
     
