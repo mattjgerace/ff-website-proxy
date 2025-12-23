@@ -21,6 +21,7 @@ app.all('/*splat', async (req, res) => {
     const response = await axios({
       method: req.method,
       url,
+      params: req.query,
       headers: {
         ...req.headers,
         'Authorization': `${BACKEND_API_KEY}`
