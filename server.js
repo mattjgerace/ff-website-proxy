@@ -15,6 +15,13 @@ const BACKEND_API_KEY = process.env.BACKEND_API_KEY
 
 app.all('/*splat', async (req, res) => {
   try {
+    const {
+      host,
+      origin,
+      referer,
+      'content-length': contentLength,
+      ...safeHeaders
+    } = req.headers
     const path = req.params.splat
     const url = `${BACKEND_URL}/${path.join('/')}`
     
@@ -23,7 +30,7 @@ app.all('/*splat', async (req, res) => {
       url,
       params: req.query,
       headers: {
-        ...req.headers,
+        ...safeHeaders,
         'Authorization': `${BACKEND_API_KEY}`
       },
       data: req.body
