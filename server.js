@@ -31,7 +31,8 @@ app.all('/*splat', async (req, res) => {
       params: req.query,
       headers: {
         ...safeHeaders,
-        'Authorization': `${BACKEND_API_KEY}`
+        'Authorization': `${BACKEND_API_KEY}`,
+        'Content-Type': 'application/json'
       },
       data: req.body
     })
