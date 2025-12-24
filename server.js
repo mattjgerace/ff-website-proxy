@@ -15,27 +15,20 @@ const BACKEND_API_KEY = process.env.BACKEND_API_KEY
 
 app.all('/*splat', async (req, res) => {
   try {
-    const {
-      host,
-      origin,
-      referer,
-      'content-length': contentLength,
-      ...safeHeaders
-    } = req.headers
     const path = req.params.splat
     const url = `${BACKEND_URL}/${path.join('/')}`
     
     const response = await axios({
-      method: req.method,
-      url,
-      params: req.query,
-      headers: {
-        ...safeHeaders,
-        'Authorization': `${BACKEND_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      data: req.body
-    })
+    method: req.method,
+    url,
+    params: req.query,
+    headers: {
+      Authorization: BACKEND_API_KEY,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    data: req.body
+  })
 
     res.status(response.status).json(response.data)
   } catch (err) {
