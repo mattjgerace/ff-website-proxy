@@ -32,8 +32,27 @@ app.all('/*splat', async (req, res) => {
 
     res.status(response.status).json(response.data)
   } catch (err) {
-    console.error(err)
-    res.status(err.response?.status || 500).json(err.response?.data || { error: 'Proxy error' })
+    if (err.response) {
+      // Server replied with a status code (4xx/5xx)
+      console.error('HTTP error:', err.response.status);
+      throw new Error('Upstream API error');
+    }
+
+    else if (err.code === 'ECONNREFUSED') {
+      console.error('Connection refused');
+      res.status(503).json(err.response?.data || {error: 'Service is asleep'})
+      throw new Error('API service is down');
+    }
+
+    else if (err.code === 'ETIMEDOUT') {
+      console.error('Connection timed out');
+      throw new Error('API request timed out');
+    }
+    else {
+      console.error('Unknown Axios error:', err.message);
+      res.status(err.response?.status || 500).json(err.response?.data || {error: 'Proxy error'})
+      throw err;
+    }
   }
 })
 
