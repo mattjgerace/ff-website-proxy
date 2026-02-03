@@ -46,6 +46,7 @@ app.all('/*splat', async (req, res) => {
 
     else if (err.code === 'ETIMEDOUT') {
       console.error('Connection timed out');
+      res.status(504).json(err.response?.data || {error: 'API request timed out'})
       throw new Error('API request timed out');
     }
     else {
