@@ -15,19 +15,20 @@ const BACKEND_API_KEY = process.env.BACKEND_API_KEY
 
 app.all('/*splat', async (req, res) => {
   try {
-    const path = req.params.splat
-    const url = `${BACKEND_URL}/${path.join('/')}`
-    
-    const response = await axios({
-    method: req.method,
-    url,
-    params: req.query,
-    headers: {
-      Authorization: BACKEND_API_KEY,
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    },
-    data: req.body
+      const path = req.params.splat
+      const url = `${BACKEND_URL}/${path.join('/')}`
+
+      const response = await axios({
+      method: req.method,
+      url,
+      params: req.query,
+      headers: {
+        Authorization: BACKEND_API_KEY,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      data: req.body,
+      timeout: 60000
   })
 
     res.status(response.status).json(response.data)
@@ -37,13 +38,11 @@ app.all('/*splat', async (req, res) => {
       console.error('HTTP error:', err.response.status);
       throw new Error('Upstream API error');
     }
-
     else if (err.code === 'ECONNREFUSED') {
       console.error('Connection refused');
       res.status(503).json(err.response?.data || {error: 'Service is asleep'})
       throw new Error('API service is down');
     }
-
     else if (err.code === 'ETIMEDOUT') {
       console.error('Connection timed out');
       res.status(504).json(err.response?.data || {error: 'API request timed out'})
