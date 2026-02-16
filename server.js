@@ -35,7 +35,12 @@ app.all('/*splat', async (req, res) => {
     if (err.response) {
       // Server replied with a status code (4xx/5xx)
       console.error('HTTP error:', err.response.status);
-      throw new Error('Upstream API error');
+      if (err.response.status === 400) {
+        res.status(response.status).json(response.data)
+      }
+      else {
+          throw new Error('Upstream API error');
+      }
     }
     else if (err.code === 'ECONNREFUSED') {
       console.error('Connection refused');
