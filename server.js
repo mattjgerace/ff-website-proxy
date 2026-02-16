@@ -28,15 +28,17 @@ app.all('/*splat', async (req, res) => {
         'Accept': 'application/json'
       },
       data: req.body,
-  })
+    })
 
     res.status(response.status).json(response.data)
   } catch (err) {
     if (err.response) {
       // Server replied with a status code (4xx/5xx)
       console.error('HTTP error:', err.response.status);
-      if (err.response.status === 400) {
-        res.status(response.status).json(response.data)
+      if (err.response.status === 409) {
+        return res
+          .status(err.response.status)
+          .json(err.response.data);
       }
       else {
           throw new Error('Upstream API error');
