@@ -35,7 +35,7 @@ app.all('/*splat', async (req, res) => {
     if (err.response) {
       // Server replied with a status code (4xx/5xx)
       console.error('HTTP error:', err.response.status);
-      if (err.response.status === 409) {
+      if (err.response.status === 409 || err.response.status === 400 || err.response.status === 404) {
         return res
           .status(err.response.status)
           .json(err.response.data);
