@@ -28,7 +28,6 @@ app.all('/*splat', async (req, res) => {
         'Accept': 'application/json'
       },
       data: req.body,
-      timeout: 60000
   })
 
     res.status(response.status).json(response.data)
